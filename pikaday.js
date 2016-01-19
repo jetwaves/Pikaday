@@ -243,7 +243,7 @@
         // time
         showTime: true,
         showSeconds: false,
-        use24hour: false,
+        use24hour: true,
 
         // when numberOfMonths is used, this will help you to choose where the main calendar will be (default `left`, can be set to `right`)
         // only used for the first display or when a selected date is not visible
@@ -253,14 +253,24 @@
         container: undefined,
 
         // internationalization
+        /*        i18n: {
+         previousMonth : 'Previous Month',
+         nextMonth     : 'Next Month',
+         months        : ['January','February','March','April','May','June','July','August','September','October','November','December'],
+         weekdays      : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+         weekdaysShort : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+         midnight      : 'Midnight',
+         noon          : 'Noon'
+         },*/
+
         i18n: {
-            previousMonth : 'Previous Month',
-            nextMonth     : 'Next Month',
-            months        : ['January','February','March','April','May','June','July','August','September','October','November','December'],
-            weekdays      : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-            weekdaysShort : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-            midnight      : 'Midnight',
-            noon          : 'Noon'
+            previousMonth : '前一个月',
+            nextMonth     : '后一个月',
+            months        : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+            weekdays      : ['周日','周一','周二','周三','周四','周五','周六'],
+            weekdaysShort : ['日','一','二','三','四','五','六'],
+            midnight      : '午夜',
+            noon          : '中午'
         },
 
         // Theme Classname
@@ -302,11 +312,11 @@
             arr.push('is-selected');
         }
         return '<td data-day="' + d + '" class="' + arr.join(' ') + '">' +
-                 '<button class="pika-button pika-day" type="button" ' +
-                    'data-pika-year="' + y + '" data-pika-month="' + m + '" data-pika-day="' + d + '">' +
-                        d +
-                 '</button>' +
-               '</td>';
+            '<button class="pika-button pika-day" type="button" ' +
+            'data-pika-year="' + y + '" data-pika-month="' + m + '" data-pika-day="' + d + '">' +
+            d +
+            '</button>' +
+            '</td>';
     },
 
     renderWeek = function (d, m, y) {
@@ -352,9 +362,9 @@
 
         for (arr = [], i = 0; i < 12; i++) {
             arr.push('<option value="' + (year === refYear ? i - c : 12 + i - c) + '"' +
-                (i === month ? ' selected': '') +
-                ((isMinYear && i < opts.minMonth) || (isMaxYear && i > opts.maxMonth) ? 'disabled' : '') + '>' +
-                opts.i18n.months[i] + '</option>');
+            (i === month ? ' selected': '') +
+            ((isMinYear && i < opts.minMonth) || (isMaxYear && i > opts.maxMonth) ? 'disabled' : '') + '>' +
+            opts.i18n.months[i] + '</option>');
         }
         monthHtml = '<div class="pika-label">' + opts.i18n.months[month] + '<select class="pika-select pika-select-month" tabindex="-1">' + arr.join('') + '</select></div>';
 
@@ -433,7 +443,7 @@
 
         if (opts.showSeconds) {
             to_return += '<td>:</td>' +
-                renderTimePicker(60, ss, 'pika-select-second', function(i) { if (i < 10) return "0" + i; return i });
+            renderTimePicker(60, ss, 'pika-select-second', function(i) { if (i < 10) return "0" + i; return i });
         }
         return to_return + '</tr></tbody></table>';
     },
@@ -462,10 +472,10 @@
             if (!hasClass(target.parentNode, 'is-disabled')) {
                 if (hasClass(target, 'pika-button') && !hasClass(target, 'is-empty')) {
                     var newDate = new Date(
-                            target.getAttribute('data-pika-year'),
-                            target.getAttribute('data-pika-month'),
-                            target.getAttribute('data-pika-day')
-                        );
+                        target.getAttribute('data-pika-year'),
+                        target.getAttribute('data-pika-month'),
+                        target.getAttribute('data-pika-day')
+                    );
                     // Preserve time selection when date changed
                     if (self._d && opts.showTime) {
                         newDate.setHours(self._d.getHours());
@@ -540,7 +550,7 @@
                 date = new Date(Date.parse(opts.field.value));
             }
             if (isDate(date)) {
-              self.setDate(date)
+                self.setDate(date)
             }
             if (!self._v) {
                 self.show();
@@ -697,7 +707,7 @@
                 opts.maxDate = opts.minDate = false;
             }
             if (opts.minDate) {
-               this.setMinDate(opts.minDate);
+                this.setMinDate(opts.minDate);
             }
             if (opts.maxDate) {
                 if (!opts.showTime) setToStartOfDay(opts.maxDate);
@@ -929,7 +939,7 @@
         setMinDate: function(value)
         {
             if (!this._o.showTime) setToStartOfDay(this._o.minDate);
-                                   setToStartOfDay(value);
+            setToStartOfDay(value);
             this._o.minDate = value;
             this._o.minYear  = value.getFullYear();
             this._o.minMonth = value.getMonth();
@@ -977,12 +987,12 @@
 
             if (opts.showTime) {
                 html += '<div class="pika-time-container">' +
-                        renderTime(
-                            this._d ? this._d.getHours() : 0,
-                            this._d ? this._d.getMinutes() : 0,
-                            this._d ? this._d.getSeconds() : 0,
-                            opts)
-                    + '</div>';
+                renderTime(
+                    this._d ? this._d.getHours() : 0,
+                    this._d ? this._d.getMinutes() : 0,
+                    this._d ? this._d.getSeconds() : 0,
+                    opts)
+                + '</div>';
             }
 
             this.el.innerHTML = html;
@@ -1007,11 +1017,11 @@
         {
             if (this._o.container) return;
             var field = this._o.trigger, pEl = field,
-            width = this.el.offsetWidth, height = this.el.offsetHeight,
-            viewportWidth = window.innerWidth || document.documentElement.clientWidth,
-            viewportHeight = window.innerHeight || document.documentElement.clientHeight,
-            scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop,
-            left, top, clientRect;
+                width = this.el.offsetWidth, height = this.el.offsetHeight,
+                viewportWidth = window.innerWidth || document.documentElement.clientWidth,
+                viewportHeight = window.innerHeight || document.documentElement.clientHeight,
+                scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop,
+                left, top, clientRect;
 
             if (typeof field.getBoundingClientRect === 'function') {
                 clientRect = field.getBoundingClientRect();
@@ -1029,16 +1039,16 @@
             // default position is bottom & left
             if ((this._o.reposition && left + width > viewportWidth) ||
                 (
-                    this._o.position.indexOf('right') > -1 &&
-                    left - width + field.offsetWidth > 0
+                this._o.position.indexOf('right') > -1 &&
+                left - width + field.offsetWidth > 0
                 )
             ) {
                 left = left - width + field.offsetWidth;
             }
             if ((this._o.reposition && top + height > viewportHeight + scrollTop) ||
                 (
-                    this._o.position.indexOf('top') > -1 &&
-                    top - height - field.offsetHeight > 0
+                this._o.position.indexOf('top') > -1 &&
+                top - height - field.offsetHeight > 0
                 )
             ) {
                 top = top - height - field.offsetHeight;
@@ -1085,9 +1095,9 @@
                     isToday = compareDates(day, now),
                     isEmpty = i < before || i >= (days + before),
                     isDisabled = (minDate_date && day < minDate_date) ||
-                                 (maxDate_date && day > maxDate_date) ||
-                                 (opts.disableWeekends && isWeekend(day)) ||
-                                 (opts.disableDayFn && opts.disableDayFn(day));
+                        (maxDate_date && day > maxDate_date) ||
+                        (opts.disableWeekends && isWeekend(day)) ||
+                        (opts.disableDayFn && opts.disableDayFn(day));
 
                 row.push(renderDay(1 + (i - before), month, year, isSelected, isToday, isDisabled, isEmpty));
 
